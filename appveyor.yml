@@ -22,7 +22,7 @@ matrix:
 #---------------------------------#
 
 platform:
-  - x86
+  - Win32
   - x64
 
 configuration:
@@ -34,7 +34,11 @@ before_build:
       mkdir build
       cd build
       cmake --version
-      cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=./install ..
+      IF "%PLATFORM%"=="Win32" (
+        cmake -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=./install ..
+      ) ELSE (
+        cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=./install ..
+      )
 
 build:
   parallel: true                 # enable MSBuild parallel builds

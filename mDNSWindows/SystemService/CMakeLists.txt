@@ -47,7 +47,7 @@ set(SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/../../mDNSCore/CryptoAlg.c
 )
 
-add_executable (mDNSResponder ${HEADERS} ${RESOURCES} ${SOURCES})
+add_executable(mDNSResponder ${HEADERS} ${RESOURCES} ${SOURCES})
 
 # Handle the Message Compiler file EventLog.mc, which generates the header file EventLog.h
 add_custom_command(
@@ -97,4 +97,8 @@ target_link_libraries(mDNSResponder PRIVATE
   crypt32
   netapi32
   powrprof
+)
+
+install(TARGETS mDNSResponder
+  RUNTIME DESTINATION bin
 )

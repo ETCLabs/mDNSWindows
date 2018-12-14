@@ -22,7 +22,7 @@ set(SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/../../mDNSShared/GenLinkedList.c
 )
 
-add_library (dnssd SHARED ${HEADERS} ${RESOURCES} ${SOURCES})
+add_library(dnssd SHARED ${HEADERS} ${RESOURCES} ${SOURCES})
 
 # We want to make the IDE source groups, project name, and project properties similar to the original MSVC project.
 set_target_properties(dnssd PROPERTIES PROJECT_LABEL DLL)
@@ -50,3 +50,11 @@ target_include_directories(dnssd PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/..
 )
 target_link_libraries(dnssd PRIVATE ws2_32 iphlpapi)
+
+install(TARGETS dnssd
+  RUNTIME DESTINATION dll
+)
+install(FILES
+  ${CMAKE_CURRENT_LIST_DIR}/../../mDNSShared/dns_sd.h
+  DESTINATION include
+)

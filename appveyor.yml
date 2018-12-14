@@ -53,17 +53,3 @@ artifacts:
     name: mDNSWindows 32-bit artifacts
   - path: build/install/mDNSWindows_x64.zip
     name: mDNSWindows 64-bit artifacts
-
-for:
--
-  branches:
-    only:
-      - /.*/
-
-  configuration:
-    - Debug
-    - Release
-
-  after_build:
-
-  artifacts:

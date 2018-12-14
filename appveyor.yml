@@ -34,7 +34,7 @@ before_build:
       mkdir build
       cd build
       cmake --version
-      IF "%PLATFORM%"=="x64" ( SET CMAKE_GENERATOR_APPEND= Win64 )
+      IF "%PLATFORM%"=="x64" (SET CMAKE_GENERATOR_APPEND= Win64)
       cmake -G "Visual Studio 15 2017%CMAKE_GENERATOR_APPEND%" -DCMAKE_INSTALL_PREFIX=./install ..
 
 build:
@@ -59,7 +59,7 @@ for:
         7z a mDNSWindows_%PLATFORM%.zip *
 
   artifacts:
-    - path: build/install/mDNSWindows_x86.zip
+    - path: build/install/mDNSWindows_Win32.zip
       name: mDNSWindows 32-bit artifacts
     - path: build/install/mDNSWindows_x64.zip
       name: mDNSWindows 64-bit artifacts

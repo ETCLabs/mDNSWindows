@@ -53,9 +53,9 @@ for:
 
   after_build:
     - cmd: |-
-      cmake -P cmake_install.cmake
-      cd install
-      7z a mDNSWindows_%PLATFORM%.zip *
+        cmake -P cmake_install.cmake
+        cd install
+        7z a mDNSWindows_%PLATFORM%.zip *
 
   artifacts:
     - path: build/install/mDNSWindows_x86.zip

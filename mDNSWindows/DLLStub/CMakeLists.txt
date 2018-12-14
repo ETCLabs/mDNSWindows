@@ -33,3 +33,7 @@ target_include_directories(dnssdStatic
   ${CMAKE_CURRENT_LIST_DIR}/../../mDNSWindows
   ${CMAKE_CURRENT_LIST_DIR}/..
 )
+
+install(TARGETS dnssdStatic
+  ARCHIVE DESTINATION lib
+)

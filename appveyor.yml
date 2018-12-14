@@ -1,0 +1,65 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+version: '{build}'
+
+skip_commits:
+  files:
+    - '**/*.md'
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+image: Visual Studio 2017
+
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+platform:
+  - Win32
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+before_build:
+  - cmd: |-
+      mkdir build
+      cd build
+      cmake --version
+      IF "%PLATFORM%"=="x64" (SET CMAKE_GENERATOR_APPEND= Win64)
+      cmake -G "Visual Studio 15 2017%CMAKE_GENERATOR_APPEND%" -DCMAKE_INSTALL_PREFIX=./install ..
+
+build:
+  parallel: true                 # enable MSBuild parallel builds
+  project: build\mDNSWindows.sln # path to Visual Studio solution or project
+
+  # MSBuild verbosity level
+  verbosity: minimal
+
+for:
+-
+  branches:
+    only:
+      - master
+
+  configuration: Release
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        cd install
+        7z a mDNSWindows_%PLATFORM%.zip *
+
+  artifacts:
+    - path: build/install/mDNSWindows_Win32.zip
+      name: mDNSWindows 32-bit artifacts
+    - path: build/install/mDNSWindows_x64.zip
+      name: mDNSWindows 64-bit artifacts

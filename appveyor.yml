@@ -25,9 +25,7 @@ platform:
   - Win32
   - x64
 
-configuration:
-  - Debug
-  - Release
+configuration: Release
 
 before_build:
   - cmd: |-
@@ -44,22 +42,28 @@ build:
   # MSBuild verbosity level
   verbosity: minimal
 
+after_build:
+  - cmd: |-
+      cmake -P cmake_install.cmake
+      cd install
+      7z a mDNSWindows_%PLATFORM%.zip *
+
+artifacts:
+  - path: build/install/mDNSWindows_Win32.zip
+    name: mDNSWindows 32-bit artifacts
+  - path: build/install/mDNSWindows_x64.zip
+    name: mDNSWindows 64-bit artifacts
+
 for:
 -
   branches:
     only:
-      - master
+      - /.*/
 
-  configuration: Release
+  configuration:
+    - Debug
+    - Release
 
   after_build:
-    - cmd: |-
-        cmake -P cmake_install.cmake
-        cd install
-        7z a mDNSWindows_%PLATFORM%.zip *
 
   artifacts:
-    - path: build/install/mDNSWindows_Win32.zip
-      name: mDNSWindows 32-bit artifacts
-    - path: build/install/mDNSWindows_x64.zip
-      name: mDNSWindows 64-bit artifacts

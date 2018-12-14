@@ -62,15 +62,3 @@ for:
       name: mDNSWindows 32-bit artifacts
     - path: build/install/mDNSWindows_x64.zip
       name: mDNSWindows 64-bit artifacts
-
-  deploy:
-    release: mDNSWindows $(APPVEYOR_REPO_TAG_NAME)
-    description: 'Automated release of mDNSWindows for version $(APPVEYOR_REPO_TAG_NAME)'
-    provider: GitHub
-    auth_token:
-      secure: D2tJBo+pb7fiu19yt3FYK5QSqT9bnMdlBHEIWutil33+rKjt1cP5nnB0m1XMkTsM
-    artifact: /.*mDNSWindows.*\.zip/
-    draft: false
-    prerelease: false
-    on:
-      APPVEYOR_REPO_TAG: true        # deploy on tag push only

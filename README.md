@@ -5,7 +5,7 @@ Windows support. See [APPLE_README.txt](./APPLE_README.txt) for the original
 README that accompanied this project.
 
 Most of the files in this repository are verbatim as they appeared in the
-tarball version 878.200.35 obtained from Apple's
+tarball version 878.70.2 obtained from Apple's
 [download page](https://opensource.apple.com/tarballs/mDNSResponder/). Files
 and projects not relevant to mDNS/DNS-SD support on Windows have been removed.
 Legacy build projects have been removed and replaced with a CMake system. Any

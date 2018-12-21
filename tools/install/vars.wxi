@@ -1,0 +1,12 @@
+<!-- File to define build variables for the mDNSWindows Merge Module project. -->
+<Include>
+  <?define VersionNumber = "1.0.0.1" ?>
+
+  <?if $(var.Platform) = x64 ?>
+    <?define ProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?define PkgDescription = "ETC DNS-SD Service 64-bit Merge Module" ?>
+  <?else ?>
+    <?define ProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?define PkgDescription = "ETC DNS-SD Service 32-bit Merge Module" ?>
+  <?endif ?>
+</Include>

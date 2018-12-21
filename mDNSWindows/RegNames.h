@@ -27,7 +27,7 @@
 
 #	define kServiceParametersSoftware			L"SOFTWARE"
 #	define kServiceParametersNode				L"SOFTWARE\\ETC\\DNS-SD"
-#	define kServiceName							L"DNS-SD Service"
+#	define kServiceName							L"ETC DNS-SD Service"
 #	define kServiceDynDNSBrowseDomains			L"BrowseDomains"
 #	define kServiceDynDNSHostNames				L"HostNames"
 #	define kServiceDynDNSRegistrationDomains	L"RegistrationDomains"

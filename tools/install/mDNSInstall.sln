@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "mDNSInstall_x86", "mDNSInstall_x86.wixproj", "{6076639B-C870-41F9-BE12-6309388D857C}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "mDNSInstall_x64", "mDNSInstall_x64.wixproj", "{8F59D28C-BDE5-4724-B43A-4C36489201CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6076639B-C870-41F9-BE12-6309388D857C}.Debug|x64.ActiveCfg = Debug|x86
+		{6076639B-C870-41F9-BE12-6309388D857C}.Debug|x86.ActiveCfg = Debug|x86
+		{6076639B-C870-41F9-BE12-6309388D857C}.Debug|x86.Build.0 = Debug|x86
+		{6076639B-C870-41F9-BE12-6309388D857C}.Release|x64.ActiveCfg = Release|x86
+		{6076639B-C870-41F9-BE12-6309388D857C}.Release|x86.ActiveCfg = Release|x86
+		{6076639B-C870-41F9-BE12-6309388D857C}.Release|x86.Build.0 = Release|x86
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Debug|x64.ActiveCfg = Debug|x64
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Debug|x64.Build.0 = Debug|x64
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Debug|x86.ActiveCfg = Debug|x64
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Release|x64.ActiveCfg = Release|x64
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Release|x64.Build.0 = Release|x64
+		{8F59D28C-BDE5-4724-B43A-4C36489201CD}.Release|x86.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B447465E-804E-461E-9E7D-9CB67891ECB9}
+	EndGlobalSection
+EndGlobal

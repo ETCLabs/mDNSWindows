@@ -17,6 +17,8 @@
 
 /* ETC made the following changes:
  * 10/23/2018 NB-W Modified RecordUpdatedNiceLabel to match Service.h's parameter list
+ * 12/21/2018 SMK Added -passiveinstall option to install the service or report success if the
+ *                service already existed
  */
 
 #include	<stdio.h>
@@ -247,6 +249,27 @@ int	Main( int argc, LPTSTR argv[] )
 				goto exit;
 			}
 		}
+		else if( StrCmp( argv[ i ], TEXT("-passiveinstall") ) == 0 )
+		{
+			TCHAR desc[ 256 ];
+			
+			desc[ 0 ] = 0;
+			LoadString( GetModuleHandle( NULL ), IDS_SERVICE_DESCRIPTION, desc, sizeof( desc ) );
+			err = InstallService( kServiceName, kServiceName, desc, argv[0] );
+			if( err )
+			{
+				if ( err == ERROR_SERVICE_EXISTS )
+				{
+					// If the service already existed, report success
+					err = 0;
+				}
+				else
+				{
+					ReportStatus( EVENTLOG_ERROR_TYPE, "install service failed (%d)\n", err );
+					goto exit;
+				}
+			}
+		}
 		else if( StrCmp( argv[ i ], TEXT("-remove") ) == 0 )		// Remove
 		{
 			err = RemoveService( kServiceName );
@@ -319,15 +342,16 @@ static void	Usage( void )
 	fprintf( stderr, "\n" );
 	fprintf( stderr, "mDNSResponder 1.0d1\n" );
 	fprintf( stderr, "\n" );
-	fprintf( stderr, "    <no args>    Runs the service normally\n" );
-	fprintf( stderr, "    -install     Creates the service and starts it\n" );
-	fprintf( stderr, "    -remove      Stops the service and deletes it\n" );
-	fprintf( stderr, "    -start       Starts the service dispatcher after processing all other arguments\n" );
-	fprintf( stderr, "    -server      Runs the service directly as a server (for debugging)\n" );
-	fprintf( stderr, "    -q           Toggles Quiet Mode (no events or output)\n" );
-	fprintf( stderr, "    -remote      Allow remote connections\n" );
-	fprintf( stderr, "    -cache n     Number of mDNS cache entries (defaults to %d)\n", kDNSServiceCacheEntryCountDefault );
-	fprintf( stderr, "    -h[elp]      Display Help/Usage\n" );
+	fprintf( stderr, "    <no args>       Runs the service normally\n" );
+	fprintf( stderr, "    -install        Creates the service and starts it\n" );
+	fprintf( stderr, "    -passiveinstall Creates the service if it doesn't exist already and always reports success\n" );
+	fprintf( stderr, "    -remove      	  Stops the service and deletes it\n" );
+	fprintf( stderr, "    -start       	  Starts the service dispatcher after processing all other arguments\n" );
+	fprintf( stderr, "    -server      	  Runs the service directly as a server (for debugging)\n" );
+	fprintf( stderr, "    -q           	  Toggles Quiet Mode (no events or output)\n" );
+	fprintf( stderr, "    -remote      	  Allow remote connections\n" );
+	fprintf( stderr, "    -cache n     	  Number of mDNS cache entries (defaults to %d)\n", kDNSServiceCacheEntryCountDefault );
+	fprintf( stderr, "    -h[elp]      	  Display Help/Usage\n" );
 	fprintf( stderr, "\n" );
 }
 

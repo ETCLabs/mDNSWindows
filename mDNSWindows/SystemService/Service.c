@@ -19,6 +19,7 @@
  * 10/23/2018 NB-W Modified RecordUpdatedNiceLabel to match Service.h's parameter list
  * 12/21/2018 SMK Added -passiveinstall option to install the service or report success if the
  *                service already existed
+ *                Purged 'Bonjour' branding from built artifacts
  */
 
 #include	<stdio.h>
@@ -71,7 +72,7 @@
 //===========================================================================================================================
 
 #define	DEBUG_NAME							"[mDNSWin32] "
-#define kServiceFirewallName				L"Bonjour"
+#define kServiceFirewallName				L"DNS-SD"
 #define	kServiceDependencies				TEXT("Tcpip\0\0")
 #define	kDNSServiceCacheEntryCountDefault	512
 #define kRetryFirewallPeriod				30 * 1000

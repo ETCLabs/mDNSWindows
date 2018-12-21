@@ -17,11 +17,14 @@
 
 /* ETC made the following changes:
  * 11/7/2018 NB-W Changed IsSystemServiceDisabled to use a Unicode string instead.
+ * 12/21/2018 SMK Changed hardcoded service name to reference name defined in
+ *                RegNames.h.
  */
 
 #include <windows.h>
 #include <DebugServices.h>
 #include <stdlib.h>
+#include "RegNames.h"
 
 BOOL APIENTRY	DllMain( HANDLE inModule, DWORD inReason, LPVOID inReserved )
 {
@@ -90,8 +93,8 @@ IsSystemServiceDisabled()
 
 	for ( i = 0; i < srvCount; i++ )
 	{
-        //NB-W Made this work with Unicode
-		if ( wcscmp( lpService[i].lpServiceName, L"Bonjour Service" ) == 0 )
+		// SMK changed hardcoded string to kServiceName here
+		if ( wcscmp( lpService[i].lpServiceName, kServiceName ) == 0 )
 		{
 			if ( ( lpService[i].ServiceStatus.dwCurrentState == SERVICE_PAUSED ) || ( lpService[i].ServiceStatus.dwCurrentState == SERVICE_STOPPED ) )
 			{

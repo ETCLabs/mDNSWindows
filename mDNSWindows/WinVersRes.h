@@ -15,21 +15,23 @@
  * limitations under the License.
  */
 
+/* ETC made the following changes:
+ * 12/21/2018 SMK Purged 'Bonjour' branding from built artifacts
+ */
+
 #ifndef WINRESVERS_H
 #define WINRESVERS_H
 
-#define MASTER_PROD_NAME	"Bonjour"
+#define MASTER_PROD_NAME	"DNS-SD"
 
 // Define the company name for mDNSResponder on Windows
-#define MASTER_COMPANY_NAME   "Apple Inc."
+#define MASTER_COMPANY_NAME   "ETC Inc."
 
 // Define the product version for mDNSResponder on Windows
-#define MASTER_PROD_VERS		3,1,0,2
-#define MASTER_PROD_VERS_STR	"3,1,0,2"
-#define MASTER_PROD_VERS_STR2	"3.1.0.2"
-#define MASTER_PROD_VERS_STR3 "Explorer Plugin 3.1.0.2"
+#define MASTER_PROD_VERS		1,0,0,1
+#define MASTER_PROD_VERS_STR	"1.0.0.1"
 
 // Define the legal copyright
-#define MASTER_LEGAL_COPYRIGHT "Copyright (C) 2003-2011 Apple Inc."
+#define MASTER_LEGAL_COPYRIGHT "Copyright (C) 2018 ETC Inc."
 
 #endif // WINRESVERS_H

@@ -28,12 +28,11 @@ for:
     CMAKE_INSTALL: install_x86
     INSTALLER_PROJECT: tools\install\mDNSInstall_x86.wixproj
     INSTALLER_PROJECT_PLATFORM: x86
+    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x86.msm
 
   artifacts:
     - path: build/mDNSWindows_Win32.zip
       name: mDNSWindows 32-bit artifacts
-    - path: tools/install/bin/Release/ETC_mDNSInstall_x86.msm
-      name: mDNSWindows 32-bit merge module
 
 -
   matrix:
@@ -45,12 +44,11 @@ for:
     CMAKE_INSTALL: install_x64
     INSTALLER_PROJECT: tools\install\mDNSInstall_x64.wixproj
     INSTALLER_PROJECT_PLATFORM: x64
+    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x64.msm
 
   artifacts:
     - path: build/mDNSWindows_x64.zip
       name: mDNSWindows 64-bit artifacts
-    - path: tools/install/bin/Release/ETC_mDNSInstall_x64.msm
-      name: mDNSWindows 64-bit merge module
 
 #---------------------------------#
 #       build configuration       #
@@ -79,5 +77,7 @@ build:
 after_build:
   - cmd: |-
       cmake -P cmake_install.cmake
-      7z a mDNSWindows_%PLATFORM%.zip .\%CMAKE_INSTALL%\*
       msbuild /m /p:Platform=%INSTALLER_PROJECT_PLATFORM% ..\%INSTALLER_PROJECT%
+      mkdir .\%CMAKE_INSTALL%\merge_module
+      cp ..\%INSTALLER_ARTIFACT% .\%CMAKE_INSTALL%\merge_module
+      7z a mDNSWindows_%PLATFORM%.zip .\%CMAKE_INSTALL%\*

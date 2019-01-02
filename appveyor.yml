@@ -66,7 +66,7 @@ after_build:
   - cmd: |-
       cmake -P cmake_install.cmake
       7z a mDNSWindows_%PLATFORM%.zip .\%CMAKE_INSTALL%\*
-      msbuild .\%INSTALLER_PROJECT%
+      msbuild /m ..\%INSTALLER_PROJECT%
 
 artifacts:
   - path: build/mDNSWindows_Win32.zip

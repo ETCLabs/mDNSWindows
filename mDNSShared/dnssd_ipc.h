@@ -80,7 +80,11 @@ extern char *win32_strerror(int inErrorCode);
 #if defined(USE_TCP_LOOPBACK)
 #   define AF_DNSSD             AF_INET
 #   define MDNS_TCP_SERVERADDR  "127.0.0.1"
-#   define MDNS_TCP_SERVERPORT  5356
+#if defined(TCP_LOOPBACK_BONJOUR_COMPAT)
+#   define MDNS_TCP_SERVERPORT  5354
+#else
+#   define MDNS_TCP_SERVERPORT  5365
+#endif
 #   define LISTENQ              5
 #   define dnssd_sockaddr_t     struct sockaddr_in
 #else

@@ -2,22 +2,22 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>{8f59d28c-bde5-4724-b43a-4c36489201cd}</ProjectGuid>
+    <ProjectGuid>6076639b-c870-41f9-be12-6309388d857c</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>ETC_mDNSInstall_x64</OutputName>
+    <OutputName>ETC_mDNSInstall</OutputName>
     <OutputType>Module</OutputType>
-    <Name>mDNSInstall_x64</Name>
-    <InstallSourceDir>..\..\build\install_x64\bin</InstallSourceDir>
+    <Name>mDNSInstall</Name>
+    <InstallSourceDir>..\..\build\install\bin</InstallSourceDir>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <DefineSolutionProperties>false</DefineSolutionProperties>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug;InstallSourceDir=$(InstallSourceDir)</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineConstants>InstallSourceDir=$(InstallSourceDir)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

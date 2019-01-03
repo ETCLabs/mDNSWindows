@@ -4,6 +4,11 @@
 
 version: '{build}'
 
+branches:
+  only:
+    - develop
+    - master
+
 skip_commits:
   files:
     - '**/*.md'

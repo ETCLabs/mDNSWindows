@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+/* ETC made the following changes:
+ * 12/21/2018 SMK Purged 'Bonjour' branding from built artifacts
+ */
+
 //----------------------------------------------------------------------------------------
 //	Registry Constants
 //----------------------------------------------------------------------------------------
@@ -22,10 +26,8 @@
 #if defined(UNICODE)
 
 #	define kServiceParametersSoftware			L"SOFTWARE"
-#	define kServiceParametersAppleComputer		L"Apple Computer, Inc."
-#	define kServiceParametersBonjour			L"Bonjour"
-#	define kServiceParametersNode				L"SOFTWARE\\Apple Inc.\\Bonjour"
-#	define kServiceName							L"Bonjour Service"
+#	define kServiceParametersNode				L"SOFTWARE\\ETC\\DNS-SD"
+#	define kServiceName							L"ETC DNS-SD Service"
 #	define kServiceDynDNSBrowseDomains			L"BrowseDomains"
 #	define kServiceDynDNSHostNames				L"HostNames"
 #	define kServiceDynDNSRegistrationDomains	L"RegistrationDomains"
@@ -40,10 +42,8 @@
 # else
 
 #	define kServiceParametersSoftware			"SOFTWARE"
-#	define kServiceParametersAppleComputer		"Apple Computer, Inc."
-#	define kServiceParametersBonjour			"Bonjour"
-#	define kServiceParametersNode				"SOFTWARE\\Apple Inc.\\Bonjour"
-#	define kServiceName							"Bonjour Service"
+#	define kServiceParametersNode				"SOFTWARE\\ETC\\DNS-SD"
+#	define kServiceName							"DNS-SD Service"
 #	define kServiceDynDNSBrowseDomains			"BrowseDomains"
 #	define kServiceDynDNSHostNames				"HostNames"
 #	define kServiceDynDNSRegistrationDomains	"RegistrationDomains"

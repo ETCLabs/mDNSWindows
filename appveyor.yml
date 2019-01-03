@@ -4,6 +4,11 @@
 
 version: '{build}'
 
+branches:
+  only:
+    - develop
+    - master
+
 skip_commits:
   files:
     - '**/*.md'
@@ -14,26 +19,58 @@ skip_commits:
 
 image: Visual Studio 2017
 
-matrix:
-  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
-
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
 platform:
   - Win32
   - x64
 
 configuration: Release
 
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+for:
+-
+  matrix:
+    only:
+      - platform: Win32
+  
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017
+    CMAKE_INSTALL: install_x86
+    INSTALLER_PROJECT: tools\install\mDNSInstall_x86.wixproj
+    INSTALLER_PROJECT_PLATFORM: x86
+    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x86.msm
+
+  artifacts:
+    - path: build/mDNSWindows_Win32.zip
+      name: mDNSWindows 32-bit artifacts
+
+-
+  matrix:
+    only:
+      - platform: x64
+    
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+    CMAKE_INSTALL: install_x64
+    INSTALLER_PROJECT: tools\install\mDNSInstall_x64.wixproj
+    INSTALLER_PROJECT_PLATFORM: x64
+    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x64.msm
+
+  artifacts:
+    - path: build/mDNSWindows_x64.zip
+      name: mDNSWindows 64-bit artifacts
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
 before_build:
   - cmd: |-
       mkdir build
       cd build
       cmake --version
-      IF "%PLATFORM%"=="x64" (SET CMAKE_GENERATOR_APPEND= Win64)
-      cmake -G "Visual Studio 15 2017%CMAKE_GENERATOR_APPEND%" -DCMAKE_INSTALL_PREFIX=./install ..
+      cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=%CMAKE_INSTALL% ..
 
 build:
   parallel: true                 # enable MSBuild parallel builds
@@ -45,11 +82,7 @@ build:
 after_build:
   - cmd: |-
       cmake -P cmake_install.cmake
-      cd install
-      7z a mDNSWindows_%PLATFORM%.zip *
-
-artifacts:
-  - path: build/install/mDNSWindows_Win32.zip
-    name: mDNSWindows 32-bit artifacts
-  - path: build/install/mDNSWindows_x64.zip
-    name: mDNSWindows 64-bit artifacts
+      msbuild /m /p:Platform=%INSTALLER_PROJECT_PLATFORM% ..\%INSTALLER_PROJECT%
+      mkdir .\%CMAKE_INSTALL%\merge_module
+      cp ..\%INSTALLER_ARTIFACT% .\%CMAKE_INSTALL%\merge_module
+      7z a mDNSWindows_%PLATFORM%.zip .\%CMAKE_INSTALL%\*

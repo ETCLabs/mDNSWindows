@@ -26,6 +26,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ETC made the following changes:
+ * 12/21/2018 SMK Changed port number so that ETC-built mDNSResponder does not conflict with Apple
+ *                mDNSResponder
+ */
+
 #ifndef DNSSD_IPC_H
 #define DNSSD_IPC_H
 
@@ -75,7 +80,11 @@ extern char *win32_strerror(int inErrorCode);
 #if defined(USE_TCP_LOOPBACK)
 #   define AF_DNSSD             AF_INET
 #   define MDNS_TCP_SERVERADDR  "127.0.0.1"
+#if defined(TCP_LOOPBACK_BONJOUR_COMPAT)
 #   define MDNS_TCP_SERVERPORT  5354
+#else
+#   define MDNS_TCP_SERVERPORT  5365
+#endif
 #   define LISTENQ              5
 #   define dnssd_sockaddr_t     struct sockaddr_in
 #else

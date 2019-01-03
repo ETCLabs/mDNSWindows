@@ -8,6 +8,7 @@ branches:
   only:
     - develop
     - master
+    - /^v\d+\.\d+\.\d+/
 
 skip_commits:
   files:

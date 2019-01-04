@@ -37,9 +37,20 @@ for:
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017
 
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
+        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_x86.zip .\install\*
+
   artifacts:
     - path: build/mDNSWindows_Win32.zip
       name: mDNSWindows 32-bit artifacts
+    - path: build/ETC_mDNSInstall.msm
+      name: mDNSWindows DNS-SD Service Merge Module
+
 
 -
   matrix:
@@ -48,6 +59,12 @@ for:
     
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_x64.zip .\install\*
 
   artifacts:
     - path: build/mDNSWindows_x64.zip
@@ -70,11 +87,3 @@ build:
 
   # MSBuild verbosity level
   verbosity: minimal
-
-after_build:
-  - cmd: |-
-      cmake -P cmake_install.cmake
-      msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
-      mkdir .\install\merge_module
-      cp ..\tools\install\bin\Release\ETC_mDNSInstall.msm .\install\merge_module
-      7z a mDNSWindows_%PLATFORM%.zip .\install\*

@@ -46,11 +46,10 @@ for:
         7z a mDNSWindows_x86.zip .\install\*
 
   artifacts:
-    - path: build/mDNSWindows_Win32.zip
+    - path: build/mDNSWindows_x86.zip
       name: mDNSWindows 32-bit artifacts
     - path: build/ETC_mDNSInstall.msm
       name: mDNSWindows DNS-SD Service Merge Module
-
 
 -
   matrix:

@@ -37,14 +37,20 @@ for:
   
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017
-    CMAKE_INSTALL: install_x86
-    INSTALLER_PROJECT: tools\install\mDNSInstall_x86.wixproj
-    INSTALLER_PROJECT_PLATFORM: x86
-    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x86.msm
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
+        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_x86.zip .\install\*
 
   artifacts:
-    - path: build/mDNSWindows_Win32.zip
+    - path: build/mDNSWindows_x86.zip
       name: mDNSWindows 32-bit artifacts
+    - path: build/ETC_mDNSInstall.msm
+      name: mDNSWindows DNS-SD Service Merge Module
 
 -
   matrix:
@@ -53,10 +59,12 @@ for:
     
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017 Win64
-    CMAKE_INSTALL: install_x64
-    INSTALLER_PROJECT: tools\install\mDNSInstall_x64.wixproj
-    INSTALLER_PROJECT_PLATFORM: x64
-    INSTALLER_ARTIFACT: tools\install\bin\Release\ETC_mDNSInstall_x64.msm
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_x64.zip .\install\*
 
   artifacts:
     - path: build/mDNSWindows_x64.zip
@@ -71,7 +79,7 @@ before_build:
       mkdir build
       cd build
       cmake --version
-      cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=%CMAKE_INSTALL% ..
+      cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=install ..
 
 build:
   parallel: true                 # enable MSBuild parallel builds
@@ -79,11 +87,3 @@ build:
 
   # MSBuild verbosity level
   verbosity: minimal
-
-after_build:
-  - cmd: |-
-      cmake -P cmake_install.cmake
-      msbuild /m /p:Platform=%INSTALLER_PROJECT_PLATFORM% ..\%INSTALLER_PROJECT%
-      mkdir .\%CMAKE_INSTALL%\merge_module
-      cp ..\%INSTALLER_ARTIFACT% .\%CMAKE_INSTALL%\merge_module
-      7z a mDNSWindows_%PLATFORM%.zip .\%CMAKE_INSTALL%\*

@@ -5,27 +5,31 @@
 
   <Module Id="ETCDNSSD" Language="0" Version="$(var.VersionNumber)" Codepage="1252">
 
-    <Package Id="8A23B836-C37F-4EB7-9EA9-4CAD5E5EAABF" Description="$(var.PkgDescription)"
+    <Package Id="8A23B836-C37F-4EB7-9EA9-4CAD5E5EAABF" Description="ETC DNS-SD Service Merge Module"
         Manufacturer="ETC Inc." InstallerVersion="200" Languages="1033" SummaryCodepage="1252"
         InstallScope="perMachine" InstallPrivileges="elevated" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="$(var.ProgramFilesFolder)">
+      <Directory Id="ProgramFilesFolder">
         <Directory Id="ETC" Name="ETC">
           <Directory Id="INSTALLDIR" Name="DNS-SD" FileSource="$(var.InstallSourceDir)">
              <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6">
                 <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes" />
+                <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both" />
              </Component>
           </Directory>
         </Directory>
       </Directory>
     </Directory>
 
-    <CustomAction Id="mDNSResponder" FileKey="mDNSResponderExe" ExeCommand="-passiveinstall"
+    <CustomAction Id="RemovemDNSService" FileKey="mDNSResponderExe" ExeCommand="-remove"
+        Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="InstallmDNSService" FileKey="mDNSResponderExe" ExeCommand="-passiveinstall"
         Execute="deferred" Impersonate="no" Return="check" />
       
     <InstallExecuteSequence>
-      <Custom Action="mDNSResponder" After="StartServices">NOT REMOVE</Custom>
+      <Custom Action="RemovemDNSService" After="StopServices">REMOVE="ALL"</Custom>
+      <Custom Action="InstallmDNSService" Before="StartServices">NOT REMOVE="ALL"</Custom>
     </InstallExecuteSequence>
 
   </Module>

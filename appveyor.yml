@@ -24,10 +24,50 @@ platform:
   - Win32
   - x64
 
-configuration: Release
-
 matrix:
   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+environment:
+  SLACK_WEBHOOK:
+    secure: mmc+nEHnXGCwUvdD4qG3usIECTxCf86I1+DYO1hChDrRddKWHGVYqxlcjnTWo8YVGuku1jxYYhb1SfPgwIlY04eLlVitMgf5JlTwHZnNAHE=
+
+  matrix:
+    - MDNSWINDOWS_BUILD_TYPE: test
+    - MDNSWINDOWS_BUILD_TYPE: versioned
+
+#---------------------------------#
+#   default build configuration   #
+#---------------------------------#
+
+configuration: Release
+
+before_build:
+  - cmd: |-
+      set /p MDNSWINDOWS_VERSION=< tools/version/current_version.txt
+      mkdir build
+      cd build
+      cmake --version
+      cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=install ..
+
+build:
+  parallel: true                 # enable MSBuild parallel builds
+  project: build\mDNSWindows.sln # path to Visual Studio solution or project
+
+  # MSBuild verbosity level
+  verbosity: minimal
+
+deploy:
+  provider: BinTray
+  on:
+    MDNSWINDOWS_BUILD_TYPE: versioned
+  username: bootress
+  api_key:
+    secure: N7blYxy9CNkhOB0SasJxi8OyO7Zm6/F2RPOmgQi6IAwpTigH9klt6Cl++C2eGkbD
+  subject: etclabs
+  repo: mdnswindows_bin
+  package: latest
+  version: $(MDNSWINDOWS_VERSION)
+  publish: false
 
 for:
 -
@@ -70,20 +110,23 @@ for:
     - path: build/mDNSWindows_x64.zip
       name: mDNSWindows 64-bit artifacts
 
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
+-
+  matrix:
+    only:
+      - MDNSWINDOWS_BUILD_TYPE: test
 
-before_build:
-  - cmd: |-
-      mkdir build
-      cd build
-      cmake --version
-      cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=install ..
+  skip_commits:
+    message: /\[versioned-build\]/
 
-build:
-  parallel: true                 # enable MSBuild parallel builds
-  project: build\mDNSWindows.sln # path to Visual Studio solution or project
+-
+  matrix:
+    only:
+      - MDNSWINDOWS_BUILD_TYPE: versioned
 
-  # MSBuild verbosity level
-  verbosity: minimal
+  only_commits:
+    message: /\[versioned-build\]/
+
+  after_deploy:
+    - ps: |-
+        cd $Env:APPVEYOR_BUILD_FOLDER
+        .\tools\ci\slack_notify.ps1

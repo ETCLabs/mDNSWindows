@@ -110,14 +110,14 @@ for:
     - cmd: |-
         cmake -P cmake_install.cmake
         msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
-        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .
+        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .\mDNSWindows_Merge_%MDNSWINDOWS_VERSION%.msm
         rmdir /s /q .\install\bin
-        7z a mDNSWindows_x86.zip .\install\*
+        7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x86.zip .\install\*
 
   artifacts:
-    - path: build/mDNSWindows_x86.zip
+    - path: build/mDNSWindows_%MDNSWINDOWS_VERSION%_x86.zip
       name: mDNSWindows 32-bit artifacts
-    - path: build/ETC_mDNSInstall.msm
+    - path: build/mDNSWindows_Merge_%MDNSWINDOWS_VERSION%.msm
       name: mDNSWindows DNS-SD Service Merge Module
 
 -
@@ -136,10 +136,10 @@ for:
     - cmd: |-
         cmake -P cmake_install.cmake
         rmdir /s /q .\install\bin
-        7z a mDNSWindows_x64.zip .\install\*
+        7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x64.zip .\install\*
 
   artifacts:
-    - path: build/mDNSWindows_x64.zip
+    - path: build/mDNSWindows_%MDNSWINDOWS_VERSION%_x64.zip
       name: mDNSWindows 64-bit artifacts
 
   after_deploy:

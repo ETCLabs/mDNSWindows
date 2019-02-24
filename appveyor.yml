@@ -4,11 +4,11 @@
 
 version: '{build}'
 
-branches:
-  only:
-    - develop
-    - master
-    - /^v\d+\.\d+\.\d+/
+# branches:
+#   only:
+#     - develop
+#     - master
+#     - /^v\d+\.\d+\.\d+/
 
 skip_commits:
   files:
@@ -74,9 +74,37 @@ for:
   matrix:
     only:
       - platform: Win32
+      - MDNSWINDOWS_BUILD_TYPE: test
   
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017
+
+  skip_commits:
+    message: /\[versioned-build\]/
+
+-
+  matrix:
+    only:
+      - platform: x64
+      - MDNSWINDOWS_BUILD_TYPE: test
+
+  skip_commits:
+    message: /\[versioned-build\]/
+    
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+
+-
+  matrix:
+    only:
+      - platform: Win32
+      - MDNSWINDOWS_BUILD_TYPE: versioned
+  
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017
+
+  only_commits:
+    message: /\[versioned-build\]/
 
   after_build:
     - cmd: |-
@@ -96,7 +124,11 @@ for:
   matrix:
     only:
       - platform: x64
+      - MDNSWINDOWS_BUILD_TYPE: versioned
     
+  only_commits:
+    message: /\[versioned-build\]/
+
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017 Win64
 
@@ -109,22 +141,6 @@ for:
   artifacts:
     - path: build/mDNSWindows_x64.zip
       name: mDNSWindows 64-bit artifacts
-
--
-  matrix:
-    only:
-      - MDNSWINDOWS_BUILD_TYPE: test
-
-  skip_commits:
-    message: /\[versioned-build\]/
-
--
-  matrix:
-    only:
-      - MDNSWINDOWS_BUILD_TYPE: versioned
-
-  only_commits:
-    message: /\[versioned-build\]/
 
   after_deploy:
     - ps: |-

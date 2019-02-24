@@ -74,7 +74,7 @@ for:
   matrix:
     only:
       - platform: Win32
-      - MDNSWINDOWS_BUILD_TYPE: test
+        MDNSWINDOWS_BUILD_TYPE: test
   
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017
@@ -86,7 +86,7 @@ for:
   matrix:
     only:
       - platform: x64
-      - MDNSWINDOWS_BUILD_TYPE: test
+        MDNSWINDOWS_BUILD_TYPE: test
 
   skip_commits:
     message: /\[versioned-build\]/
@@ -98,7 +98,7 @@ for:
   matrix:
     only:
       - platform: Win32
-      - MDNSWINDOWS_BUILD_TYPE: versioned
+        MDNSWINDOWS_BUILD_TYPE: versioned
   
   environment:
     CMAKE_GENERATOR: Visual Studio 15 2017
@@ -124,7 +124,7 @@ for:
   matrix:
     only:
       - platform: x64
-      - MDNSWINDOWS_BUILD_TYPE: versioned
+        MDNSWINDOWS_BUILD_TYPE: versioned
     
   only_commits:
     message: /\[versioned-build\]/

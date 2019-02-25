@@ -8,6 +8,7 @@ branches:
   only:
     - develop
     - master
+    - /^v\d+\.\d+\.\d+/
 
 skip_commits:
   files:
@@ -23,58 +24,26 @@ platform:
   - Win32
   - x64
 
-configuration: Release
-
 matrix:
   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
 
-for:
--
+environment:
+  SLACK_WEBHOOK:
+    secure: mmc+nEHnXGCwUvdD4qG3usIECTxCf86I1+DYO1hChDrRddKWHGVYqxlcjnTWo8YVGuku1jxYYhb1SfPgwIlY04eLlVitMgf5JlTwHZnNAHE=
+
   matrix:
-    only:
-      - platform: Win32
-  
-  environment:
-    CMAKE_GENERATOR: Visual Studio 15 2017
-
-  after_build:
-    - cmd: |-
-        cmake -P cmake_install.cmake
-        msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
-        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .
-        rmdir /s /q .\install\bin
-        7z a mDNSWindows_x86.zip .\install\*
-
-  artifacts:
-    - path: build/mDNSWindows_x86.zip
-      name: mDNSWindows 32-bit artifacts
-    - path: build/ETC_mDNSInstall.msm
-      name: mDNSWindows DNS-SD Service Merge Module
-
--
-  matrix:
-    only:
-      - platform: x64
-    
-  environment:
-    CMAKE_GENERATOR: Visual Studio 15 2017 Win64
-
-  after_build:
-    - cmd: |-
-        cmake -P cmake_install.cmake
-        rmdir /s /q .\install\bin
-        7z a mDNSWindows_x64.zip .\install\*
-
-  artifacts:
-    - path: build/mDNSWindows_x64.zip
-      name: mDNSWindows 64-bit artifacts
+    - MDNSWINDOWS_BUILD_TYPE: test
+    - MDNSWINDOWS_BUILD_TYPE: versioned
 
 #---------------------------------#
-#       build configuration       #
+#   default build configuration   #
 #---------------------------------#
+
+configuration: Release
 
 before_build:
   - cmd: |-
+      set /p MDNSWINDOWS_VERSION=< tools/version/current_version.txt
       mkdir build
       cd build
       cmake --version
@@ -86,3 +55,94 @@ build:
 
   # MSBuild verbosity level
   verbosity: minimal
+
+deploy:
+  provider: BinTray
+  on:
+    MDNSWINDOWS_BUILD_TYPE: versioned
+  username: bootress
+  api_key:
+    secure: N7blYxy9CNkhOB0SasJxi8OyO7Zm6/F2RPOmgQi6IAwpTigH9klt6Cl++C2eGkbD
+  subject: etclabs
+  repo: mdnswindows_bin
+  package: latest
+  version: $(MDNSWINDOWS_VERSION)
+  publish: false
+
+for:
+-
+  matrix:
+    only:
+      - platform: Win32
+        MDNSWINDOWS_BUILD_TYPE: test
+  
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017
+
+  skip_commits:
+    message: /\[versioned-build\]/
+
+-
+  matrix:
+    only:
+      - platform: x64
+        MDNSWINDOWS_BUILD_TYPE: test
+
+  skip_commits:
+    message: /\[versioned-build\]/
+    
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+
+-
+  matrix:
+    only:
+      - platform: Win32
+        MDNSWINDOWS_BUILD_TYPE: versioned
+  
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017
+
+  only_commits:
+    message: /\[versioned-build\]/
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
+        copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .\mDNSWindows_Merge_%MDNSWINDOWS_VERSION%.msm
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x86.zip .\install\*
+
+  artifacts:
+    - path: build/mDNSWindows_%MDNSWINDOWS_VERSION%_x86.zip
+      name: mDNSWindows 32-bit artifacts
+    - path: build/mDNSWindows_Merge_%MDNSWINDOWS_VERSION%.msm
+      name: mDNSWindows DNS-SD Service Merge Module
+
+-
+  matrix:
+    only:
+      - platform: x64
+        MDNSWINDOWS_BUILD_TYPE: versioned
+    
+  only_commits:
+    message: /\[versioned-build\]/
+
+  environment:
+    CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+
+  after_build:
+    - cmd: |-
+        cmake -P cmake_install.cmake
+        rmdir /s /q .\install\bin
+        7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x64.zip .\install\*
+
+  artifacts:
+    - path: build/mDNSWindows_%MDNSWINDOWS_VERSION%_x64.zip
+      name: mDNSWindows 64-bit artifacts
+
+  after_deploy:
+    - ps: |-
+        cd $Env:APPVEYOR_BUILD_FOLDER
+        .\tools\ci\slack_notify.ps1

@@ -26,6 +26,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ETC made the following changes:
+ * 2019-02-24 SMK Added DNSSD_BUILD_MOCK_LIB option to allow building a lib that removes the core
+ *                DNS-SD API functions (so they can be replaced with mocks) while keeping utility
+ *                functions available.
+ */
+
 #include "DLLStub.h"
 
 static int		g_defaultErrorCode = kDNSServiceErr_ServiceNotRunning;
@@ -79,6 +85,7 @@ DLLStub::GetProcAddress( FARPROC * func, LPCSTR lpProcName )
 	return ( *func != NULL );
 }
 
+#if !DNSSD_BUILD_MOCK_LIB
 
 dnssd_sock_t DNSSD_API
 DNSServiceRefSockFD(DNSServiceRef sdRef)
@@ -298,6 +305,7 @@ DNSServiceResolve
 	return ret;
 }
 
+#endif /* !DNSSD_BUILD_MOCK_LIB */
 
 DNSServiceErrorType DNSSD_API
 DNSServiceConstructFullName
@@ -320,6 +328,7 @@ DNSServiceConstructFullName
 	return ret;
 }
 
+#if !DNSSD_BUILD_MOCK_LIB
 
 DNSServiceErrorType DNSSD_API
 DNSServiceCreateConnection(DNSServiceRef *sdRef)
@@ -490,6 +499,7 @@ DNSServiceGetProperty
 	return ret;
 }
 
+#endif /* !DNSSD_BUILD_MOCK_LIB */
 
 void DNSSD_API
 TXTRecordCreate

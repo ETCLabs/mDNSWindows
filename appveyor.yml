@@ -29,7 +29,7 @@ matrix:
 
 environment:
   SLACK_WEBHOOK:
-    secure: mmc+nEHnXGCwUvdD4qG3usIECTxCf86I1+DYO1hChDrRddKWHGVYqxlcjnTWo8YVGuku1jxYYhb1SfPgwIlY04eLlVitMgf5JlTwHZnNAHE=
+    secure: mmc+nEHnXGCwUvdD4qG3usIECTxCf86I1+DYO1hChDo6BBxKquCLLL+bTI3E1Di2/yS3CvCISXeKBC7RRrdSRfo+0Ej1Llp/oHDTTC5loSc=
 
   matrix:
     - MDNSWINDOWS_BUILD_TYPE: test

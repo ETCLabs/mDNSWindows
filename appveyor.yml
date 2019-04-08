@@ -111,7 +111,6 @@ for:
         cmake -P cmake_install.cmake
         msbuild /m /p:Platform=x86 ..\tools\install\mDNSInstall.wixproj
         copy ..\tools\install\bin\Release\ETC_mDNSInstall.msm .\mDNSWindows_Merge_%MDNSWINDOWS_VERSION%.msm
-        rmdir /s /q .\install\bin
         7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x86.zip .\install\*
 
   artifacts:
@@ -135,7 +134,6 @@ for:
   after_build:
     - cmd: |-
         cmake -P cmake_install.cmake
-        rmdir /s /q .\install\bin
         7z a mDNSWindows_%MDNSWINDOWS_VERSION%_x64.zip .\install\*
 
   artifacts:

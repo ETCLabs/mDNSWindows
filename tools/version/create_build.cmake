@@ -1,10 +1,12 @@
 if(NOT NEW_VERSION_NUMBER)
-  message(FATAL_ERROR "You must pass a version number!")
+  message(FATAL_ERROR "You must pass a version number using -DNEW_VERSION_NUMBER=1.2.3.4")
 endif()
 
 # Build the variables we will need to configure the versioned files
 set(MDNSWINDOWS_VERSION ${NEW_VERSION_NUMBER})
 string(REPLACE "." "," MDNSWINDOWS_VERSION_COMMA_SEP ${MDNSWINDOWS_VERSION})
+string(TIMESTAMP CURRENT_YEAR "%Y")
+set(MDNSWINDOWS_VERSION_COPYRIGHT "Copyright (C) ${CURRENT_YEAR} ETC Inc.")
 
 # Configure the various versioned files
 get_filename_component(VERSION_DIR ${CMAKE_SCRIPT_MODE_FILE} DIRECTORY)

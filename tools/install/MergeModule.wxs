@@ -13,7 +13,7 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="ETC" Name="ETC">
           <Directory Id="INSTALLDIR" Name="DNS-SD" FileSource="$(var.InstallSourceDir)">
-             <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6">
+             <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6" SharedDllRefCount='yes'>
                 <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes" />
                 <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both" />
              </Component>

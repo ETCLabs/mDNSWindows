@@ -16,6 +16,7 @@ steps:
     displayName: 'Re-zip artifacts'
     inputs:
       rootFolderOrFile: '$(System.DefaultWorkingDirectory)/${{ parameters.artifactName }}'
+      includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.artifactName }}.zip'
   - task: cURLUploader@2

@@ -21,3 +21,4 @@ steps:
       password: '$(svc-etclabs_bintray_api_key)'
       url: 'https://api.bintray.com/content/etclabs/mdnswindows_bin/latest/${{ parameters.artifactVersion }}/${{ parameters.artifactTargetFile }}'
       options: '-G -d publish=0 --fail'
+      remotePath: ''

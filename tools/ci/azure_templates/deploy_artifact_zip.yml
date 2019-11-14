@@ -1,0 +1,29 @@
+# A reusable step to download a built artifact folder, re-zip it and upload it
+# to JFrog Bintray.
+
+parameters:
+  artifactName: ''
+  artifactTargetFile: ''
+  artifactVersion: ''
+
+steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Build Artifact: ${{ parameters.artifactName }}'
+    inputs:
+      artifactName: ${{ parameters.artifactName }}
+      downloadPath: $(System.DefaultWorkingDirectory)
+  - task: ArchiveFiles@2
+    displayName: 'Re-zip artifacts'
+    inputs:
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/${{ parameters.artifactName }}'
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.artifactName }}.zip'
+  - task: cURLUploader@2
+    displayName: 'Upload Build Artifact to BinTray: ${{ parameters.artifactName }}'
+    inputs:
+      files: $(Build.ArtifactStagingDirectory)/${{ parameters.artifactName }}.zip
+      authType: 'UserAndPass'
+      username: 'svc-etclabs'
+      password: '$(svc-etclabs_bintray_api_key)'
+      url: 'https://api.bintray.com/content/etclabs/mdnswindows_bin/latest/${{ parameters.artifactVersion }}/${{ parameters.artifactTargetFile }}'
+      options: '-G -d publish=0 --fail'

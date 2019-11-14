@@ -13,22 +13,21 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="ETC" Name="ETC">
           <Directory Id="INSTALLDIR" Name="DNS-SD" FileSource="$(var.InstallSourceDir)">
-             <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6" SharedDllRefCount='yes'>
-                <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes" />
-                <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both" />
-             </Component>
+            <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6"
+                SharedDllRefCount="yes">
+              <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes" />
+              <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both"
+                  Start="install" Remove="uninstall" />
+            </Component>
           </Directory>
         </Directory>
       </Directory>
     </Directory>
 
-    <CustomAction Id="RemovemDNSService" FileKey="mDNSResponderExe" ExeCommand="-remove"
-        Execute="deferred" Impersonate="no" Return="ignore" />
     <CustomAction Id="InstallmDNSService" FileKey="mDNSResponderExe" ExeCommand="-passiveinstall"
         Execute="deferred" Impersonate="no" Return="check" />
       
     <InstallExecuteSequence>
-      <Custom Action="RemovemDNSService" After="StopServices">REMOVE="ALL"</Custom>
       <Custom Action="InstallmDNSService" Before="StartServices">NOT REMOVE="ALL"</Custom>
     </InstallExecuteSequence>
 

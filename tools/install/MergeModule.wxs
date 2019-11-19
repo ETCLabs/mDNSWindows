@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
 
   <?include vars.wxi ?>
 
@@ -15,7 +16,13 @@
           <Directory Id="INSTALLDIR" Name="DNS-SD" FileSource="$(var.InstallSourceDir)">
             <Component Id="mDNSResponder" Guid="D555EC83-B046-4A39-8A4E-3FCF312820C6"
                 SharedDllRefCount="yes">
-              <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes" />
+              <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes">
+                <!-- Create Windows Firewall exceptions for the mDNSResponder executable. -->
+                <fire:FirewallException Id="EtcDnsSdTCP" Name="ETC DNS-SD Service (TCP-in)"
+                    Profile="all" Protocol="tcp" Scope="any" IgnoreFailure="no" />
+                <fire:FirewallException Id="EtcDnsSdUDP" Name="ETC DNS-SD Service (UDP-in)"
+                    Profile="all" Protocol="udp" Scope="any" IgnoreFailure="no" />
+              </File>
               <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both"
                   Start="install" Remove="uninstall" />
             </Component>

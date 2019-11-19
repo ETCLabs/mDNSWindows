@@ -16,9 +16,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug;InstallSourceDir=$(InstallSourceDir)</DefineConstants>
+    <CompilerAdditionalOptions>-ext WixFirewallExtension</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>-ext WixFirewallExtension</LinkerAdditionalOptions>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineConstants>InstallSourceDir=$(InstallSourceDir)</DefineConstants>
+    <CompilerAdditionalOptions>-ext WixFirewallExtension</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>-ext WixFirewallExtension</LinkerAdditionalOptions>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MergeModule.wxs" />

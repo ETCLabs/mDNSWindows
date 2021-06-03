@@ -27,12 +27,13 @@ windows-build:
     - cmake -P cmake_install.cmake
   artifacts:
     paths:
-      - build_$ARTIFACT_TYPE/
+      - build_$ARTIFACT_TYPE/install
 
 windows-build-merge-module:
   stage: build-merge-module
   tags:
     - ct-windows
   script:
-    - dir
+    - dir build_x86
+    - dir build_x64
 

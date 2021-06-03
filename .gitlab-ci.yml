@@ -47,10 +47,10 @@ deploy-binaries:
   tags:
     - ct-windows
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "main"'
-      when: manual
-    - if: '$CI_COMMIT_REF_NAME == "setup-gitlab-ci"'
-      when: manual
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      variables:
+        TAG_NAME:
+          value: "CHANGE-ME"
+          description: "The tag name to make into a GitHub release, typically vX.Y.Z"
   script:
-    - dir
-#   - python tools\ci\deploy_to_github_release.py
+    - python tools\ci\deploy_to_github_release.py

@@ -1,0 +1,38 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_NAME == "setup-gitlab-ci"'
+
+stages:
+  - build
+  - build-merge-module
+  - deploy
+
+windows-build:
+  stage: build
+  tags:
+    - ct-windows
+  parallel:
+    matrix:
+      - CMAKE_GENERATOR: Visual Studio 15 2017
+        ARTIFACT_TYPE: x86
+      - CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+        ARTIFACT_TYPE: x64
+  script:
+    - mkdir build_$env:ARTIFACT_TYPE
+    - cd build_$env:ARTIFACT_TYPE
+    - cmake -G "$env:CMAKE_GENERATOR" -DCMAKE_INSTALL_PREFIX=install ..
+    - cmake --build . --config Release
+    - cmake -P cmake_install.cmake
+  artifacts:
+    paths:
+      - build_$ARTIFACT_TYPE/
+
+windows-build-merge-module:
+  stage: build-merge-module
+  tags:
+    - ct-windows
+  script:
+    - dir
+

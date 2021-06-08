@@ -50,8 +50,6 @@ windows-versioned-build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
   before_script:
-    - !reference [.setup-pip-for-etc-artifactory, script]
-    - !reference [.install-etclibtool, script]
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
 
 .windows-build-merge-module:
@@ -74,8 +72,6 @@ windows-build-versioned-merge-module:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
   before_script:
-    - !reference [.setup-pip-for-etc-artifactory, script]
-    - !reference [.install-etclibtool, script]
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
   artifacts:
     paths:

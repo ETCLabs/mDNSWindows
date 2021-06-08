@@ -31,6 +31,9 @@ variables:
     - cmake -G "$env:CMAKE_GENERATOR" -DCMAKE_INSTALL_PREFIX=install ..
     - cmake --build . --config Release
     - cmake -P cmake_install.cmake
+  artifacts:
+    paths:
+      - build_$ARTIFACT_TYPE/install
 
 windows-test-build:
   extends: .windows-build
@@ -44,9 +47,6 @@ windows-versioned-build:
   before_script:
     - pip install --upgrade etclibtool
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
-  artifacts:
-    paths:
-      - build_$ARTIFACT_TYPE/install
 
 .windows-build-merge-module:
   stage: build-merge-module

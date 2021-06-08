@@ -15,6 +15,11 @@ variables:
     description: "The new version to deploy for a versioned build, in the form M.m.p.b"
   PROJECT_BOT_USER: project_217_bot
 
+include:
+  - project: 'etc/common-tech/tools/gitlab-ci-util'
+    ref: v1.1.0
+    file: '/ci-yml/python-utils.yml'
+
 .windows-build:
   stage: build
   tags:
@@ -45,7 +50,8 @@ windows-versioned-build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
   before_script:
-    - pip install --upgrade etclibtool
+    - !reference[.setup-pip-for-etc-artifactory, script]
+    - !reference[.install-etclibtool, script]
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
 
 .windows-build-merge-module:
@@ -68,7 +74,8 @@ windows-build-versioned-merge-module:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
   before_script:
-    - pip install --upgrade etclibtool
+    - !reference[.setup-pip-for-etc-artifactory, script]
+    - !reference[.install-etclibtool, script]
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
   artifacts:
     paths:
@@ -82,8 +89,3 @@ deploy-binaries:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
   script:
     - python tools\ci\deploy_to_artifactory.py $NEW_VERSION
-
-include:
-  - project: 'etc/common-tech/tools/gitlab-ci-util'
-    ref: v1.0.1
-    file: '/ci-yml/deploy-versioned-build.yml'

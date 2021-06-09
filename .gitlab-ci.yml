@@ -1,0 +1,93 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_NAME == "setup-gitlab-ci"'
+
+stages:
+  - build
+  - build-merge-module
+  - deploy
+
+variables:
+  NEW_VERSION:
+    value: "CHANGE-ME"
+    description: "The new version to deploy for a versioned build, in the form M.m.p.b"
+  PROJECT_BOT_USER: project_217_bot
+
+include:
+  - project: 'etc/common-tech/tools/gitlab-ci-util'
+    ref: v1.1.0
+    file: '/ci-yml/python-utils.yml'
+
+.windows-build:
+  stage: build
+  tags:
+    - ct-windows
+  parallel:
+    matrix:
+      - CMAKE_GENERATOR: Visual Studio 15 2017
+        ARTIFACT_TYPE: x86
+      - CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+        ARTIFACT_TYPE: x64
+  script:
+    - mkdir build_$env:ARTIFACT_TYPE
+    - cd build_$env:ARTIFACT_TYPE
+    - cmake -G "$env:CMAKE_GENERATOR" -DCMAKE_INSTALL_PREFIX=install ..
+    - cmake --build . --config Release
+    - cmake -P cmake_install.cmake
+  artifacts:
+    paths:
+      - build_$ARTIFACT_TYPE/install
+
+windows-test-build:
+  extends: .windows-build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "web"'
+
+windows-versioned-build:
+  extends: .windows-build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+  before_script:
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
+
+.windows-build-merge-module:
+  stage: build-merge-module
+  tags:
+    - ct-windows
+  script:
+    - ren build_x86 build
+    - >
+      & 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
+      -property:Configuration=Release -property:Platform=x86 .\tools\install\mDNSInstall.sln
+
+windows-build-test-merge-module:
+  extends: .windows-build-merge-module
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "web"'
+
+windows-build-versioned-merge-module:
+  extends: .windows-build-merge-module
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+  before_script:
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
+  artifacts:
+    paths:
+      - tools/install/bin/Release/ETC_mDNSInstall.msm
+
+deploy-binaries:
+  stage: deploy
+  tags:
+    - ct-windows
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+  script:
+    - git config user.name "GitLab CI"
+    - git config user.email "noreply.gitlab@etcconnect.com"
+    - git config http.sslVerify false
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step commit-and-tag . $NEW_VERSION
+    - python tools\ci\deploy_to_artifactory.py $NEW_VERSION
+    - git push "https://${PROJECT_BOT_USER}:${REPO_PUSH_TOKEN}@gitlab.etcconnect.com/${CI_PROJECT_PATH}.git" HEAD:${CI_COMMIT_REF_NAME} --tags

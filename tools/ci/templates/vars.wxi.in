@@ -1,6 +1,6 @@
 <!-- File to define build variables for the mDNSWindows Merge Module project. -->
 <Include>
-  <?define VersionNumber = "@MDNSWINDOWS_VERSION_STRING@" ?>
+  <?define VersionNumber = "@VERSION@" ?>
 
   <?if $(var.Platform) = x64 ?>
     <?define ProgramFilesFolder = "ProgramFiles64Folder" ?>

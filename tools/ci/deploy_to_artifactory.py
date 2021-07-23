@@ -67,7 +67,7 @@ def deploy_binaries(version: str):
     new_release = repo.create_git_release(
         tag=f"v{version}",
         name=f"mDNSWindows v{version}",
-        body=f"Automated release of mDNSWindows for v{version}",
+        message=f"Automated release of mDNSWindows for v{version}",
     )
     new_release.upload_asset(os.path.join("deploy", "mDNSWindows_x64.zip"))
     new_release.upload_asset(os.path.join("deploy", "mDNSWindows_x86.zip"))

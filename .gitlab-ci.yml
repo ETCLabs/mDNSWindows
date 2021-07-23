@@ -50,7 +50,7 @@ windows-versioned-build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION.1
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
 
 .windows-build-merge-module:
   stage: build-merge-module
@@ -72,7 +72,7 @@ windows-build-versioned-merge-module:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION.1
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
   artifacts:
     paths:
       - tools/install/bin/Release/ETC_mDNSInstall.msm

@@ -10,6 +10,7 @@ stages:
   - deploy
 
 variables:
+  GIT_STRATEGY: clone
   NEW_VERSION:
     value: "CHANGE-ME"
     description: "The new version to deploy for a versioned build, in the form M.m.p"

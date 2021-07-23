@@ -2,7 +2,6 @@ workflow:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "main"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_REF_NAME == "setup-gitlab-ci"'
 
 stages:
   - build
@@ -10,9 +9,10 @@ stages:
   - deploy
 
 variables:
+  GIT_STRATEGY: clone
   NEW_VERSION:
     value: "CHANGE-ME"
-    description: "The new version to deploy for a versioned build, in the form M.m.p.b"
+    description: "The new version to deploy for a versioned build, in the form M.m.p"
   PROJECT_BOT_USER: project_217_bot
 
 include:
@@ -48,9 +48,9 @@ windows-test-build:
 windows-versioned-build:
   extends: .windows-build
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
 
 .windows-build-merge-module:
   stage: build-merge-module
@@ -70,24 +70,31 @@ windows-build-test-merge-module:
 windows-build-versioned-merge-module:
   extends: .windows-build-merge-module
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
   artifacts:
     paths:
       - tools/install/bin/Release/ETC_mDNSInstall.msm
 
+# Deploy to GitHub Release for any new 3-digit version (M.m.p)
 deploy-binaries:
   stage: deploy
   tags:
-    - ct-windows
+    - ct-linux-docker
+  image: etc-docker.artifactory-mid.etcconnect.com/python:latest
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   script:
+    - pip config set global.index-url https://artifactory-mid.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
+    - pip config set global.trusted-host artifactory-mid.etcconnect.com
+    - pip install requests etclibtool PyGithub
     - git config user.name "GitLab CI"
     - git config user.email "noreply.gitlab@etcconnect.com"
     - git config http.sslVerify false
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step commit-and-tag . $NEW_VERSION
-    - python tools\ci\deploy_to_artifactory.py $NEW_VERSION
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ${NEW_VERSION}.1
+    - git add .
+    - git commit -m "[skip ci] Update version files for mDNSWindows version ${NEW_VERSION}"
+    - git tag -a v${NEW_VERSION} -m "mDNSWindows release version ${NEW_VERSION}"
     - git push "https://${PROJECT_BOT_USER}:${REPO_PUSH_TOKEN}@gitlab.etcconnect.com/${CI_PROJECT_PATH}.git" HEAD:${CI_COMMIT_REF_NAME} --tags
+    - python3 tools/ci/deploy_to_artifactory.py ${NEW_VERSION}

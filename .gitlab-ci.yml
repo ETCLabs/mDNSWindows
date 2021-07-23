@@ -88,7 +88,7 @@ deploy-binaries:
   script:
     - pip config set global.index-url https://artifactory-mid.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
     - pip config set global.trusted-host artifactory-mid.etcconnect.com
-    - pip install requests etclibtool
+    - pip install requests etclibtool PyGithub
     - git config user.name "GitLab CI"
     - git config user.email "noreply.gitlab@etcconnect.com"
     - git config http.sslVerify false

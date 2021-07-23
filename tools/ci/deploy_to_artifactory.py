@@ -20,7 +20,9 @@ def stage_binaries():
 
     os.makedirs("deploy", exist_ok=True)
 
-    with zipfile.ZipFile(os.path.join("deploy", "mDNSWindows_x64.zip"), "w") as archive:
+    with zipfile.ZipFile(
+        os.path.join("deploy", "mDNSWindows_x64.zip"), "w", zipfile.ZIP_DEFLATED
+    ) as archive:
         for (dirpath, dirnames, filenames) in os.walk(os.path.join("build_x64", "install")):
             for file in filenames:
                 relative_path_from_base = os.path.join(dirpath, file)
@@ -31,7 +33,9 @@ def stage_binaries():
                     relative_path_from_base[len(os.path.join("build_x64", "install", "")) :],
                 )
 
-    with zipfile.ZipFile(os.path.join("deploy", "mDNSWindows_x86.zip"), "w") as archive:
+    with zipfile.ZipFile(
+        os.path.join("deploy", "mDNSWindows_x86.zip"), "w", zipfile.ZIP_DEFLATED
+    ) as archive:
         for (dirpath, dirnames, filenames) in os.walk(os.path.join("build_x86", "install")):
             for file in filenames:
                 relative_path_from_base = os.path.join(dirpath, file)

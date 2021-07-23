@@ -95,4 +95,4 @@ deploy-binaries:
     - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step commit-and-tag . ${NEW_VERSION}.1
     - git tag -a v${NEW_VERSION} -m "mDNSWindows release version ${NEW_VERSION}"
     - git push "https://${PROJECT_BOT_USER}:${REPO_PUSH_TOKEN}@gitlab.etcconnect.com/${CI_PROJECT_PATH}.git" HEAD:${CI_COMMIT_REF_NAME} --tags
-    - python tools\ci\deploy_to_artifactory.py ${NEW_VERSION}
+    - python3 tools/ci/deploy_to_artifactory.py ${NEW_VERSION}

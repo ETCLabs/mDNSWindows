@@ -49,7 +49,7 @@ def stage_binaries():
 def deploy_binaries(version: str):
     """Deploys staged binaries to a new GitHub Release."""
     g = Github(login_or_token=GH_USERNAME, password=GH_API_TOKEN)
-    repo = g.get_repo("ETCLabs/mDNSWindows")
+    repo = g.get_repo(GH_REPO_IDENT)
 
     print(f"Waiting for the correct GitHub tag v{version} to become available...")
 

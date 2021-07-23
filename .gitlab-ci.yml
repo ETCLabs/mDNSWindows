@@ -12,7 +12,7 @@ stages:
 variables:
   NEW_VERSION:
     value: "CHANGE-ME"
-    description: "The new version to deploy for a versioned build, in the form M.m.p.b"
+    description: "The new version to deploy for a versioned build, in the form M.m.p"
   PROJECT_BOT_USER: project_217_bot
 
 include:
@@ -80,14 +80,19 @@ windows-build-versioned-merge-module:
 deploy-binaries:
   stage: deploy
   tags:
-    - ct-windows
+    - ct-linux-docker
+  image: etc-docker.artifactory-mid.etcconnect.com/python:latest
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+\.\d+$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   script:
+    - pip config set global.index-url https://artifactory-mid.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
+    - pip config set global.trusted-host artifactory-mid.etcconnect.com
+    - pip install requests etclibtool
     - git config user.name "GitLab CI"
     - git config user.email "noreply.gitlab@etcconnect.com"
     - git config http.sslVerify false
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . $NEW_VERSION
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step commit-and-tag . $NEW_VERSION
-    - python tools\ci\deploy_to_artifactory.py $NEW_VERSION
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ${NEW_VERSION}.1
+    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step commit-and-tag . ${NEW_VERSION}.1
+    - git tag -a v${NEW_VERSION} -m "mDNSWindows release version ${NEW_VERSION}"
     - git push "https://${PROJECT_BOT_USER}:${REPO_PUSH_TOKEN}@gitlab.etcconnect.com/${CI_PROJECT_PATH}.git" HEAD:${CI_COMMIT_REF_NAME} --tags
+    - python tools\ci\deploy_to_artifactory.py ${NEW_VERSION}

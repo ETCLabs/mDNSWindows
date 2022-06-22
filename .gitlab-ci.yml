@@ -82,12 +82,12 @@ deploy-binaries:
   stage: deploy
   tags:
     - ct-linux-docker
-  image: etc-docker.artifactory-mid.etcconnect.com/python:latest
+  image: etc-docker.artifactory.etcconnect.com/python:latest
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   script:
-    - pip config set global.index-url https://artifactory-mid.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
-    - pip config set global.trusted-host artifactory-mid.etcconnect.com
+    - pip config set global.index-url https://artifactory.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
+    - pip config set global.trusted-host artifactory.etcconnect.com
     - pip install requests etclibtool PyGithub
     - git config user.name "GitLab CI"
     - git config user.email "noreply.gitlab@etcconnect.com"

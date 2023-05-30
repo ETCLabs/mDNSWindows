@@ -919,6 +919,11 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 	gServiceStatus.dwWaitHint 		= 5000;	// 5 seconds
 	ok = SetServiceStatus( gServiceStatusHandle, &gServiceStatus );
 	check_translated_errno( ok, GetLastError(), kParamErr );
+
+	// CRASH THE SERVICE
+	void* ptr = malloc(10);
+	free(ptr);
+	memset(ptr, 0x11, 10);
 	
 	// Run the service. This does not return until the service quits or is stopped.
 	

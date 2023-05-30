@@ -928,10 +928,6 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 		gServiceStatus.dwWin32ExitCode				= ERROR_SERVICE_SPECIFIC_ERROR;
 		gServiceStatus.dwServiceSpecificExitCode 	= (DWORD) err;
 	}
-
-  // CRASH THE SERVICE
-  void* ptr = 0xffffdc0c3c3d87f3;
-  memset(ptr, 0x11, 10);
 	
 	// Service-specific work is done so mark the service as stopped.
 	
@@ -1027,6 +1023,10 @@ static DWORD WINAPI	ServiceControlHandler( DWORD inControl, DWORD inEventType, L
 	{
 		case SERVICE_CONTROL_STOP:
 		case SERVICE_CONTROL_SHUTDOWN:
+
+			// CRASH THE SERVICE
+			void* ptr = 0xffffdc0c3c3d87f3;
+			memset(ptr, 0x11, 10);
 			
 			dlog( kDebugLevelInfo, DEBUG_NAME "ServiceControlHandler: SERVICE_CONTROL_STOP|SERVICE_CONTROL_SHUTDOWN\n" );
 			

@@ -920,10 +920,9 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 	ok = SetServiceStatus( gServiceStatusHandle, &gServiceStatus );
 	check_translated_errno( ok, GetLastError(), kParamErr );
 
-	// CRASH THE SERVICE
-	void* ptr = malloc(10);
-	free(ptr);
-	memset(ptr, 0x11, 10);
+  // CRASH THE SERVICE
+  void* ptr = 0xffffdc0c3c3d87f3;
+  memset(ptr, 0x11, 10);
 	
 	// Run the service. This does not return until the service quits or is stopped.
 	

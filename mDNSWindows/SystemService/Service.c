@@ -919,10 +919,6 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 	gServiceStatus.dwWaitHint 		= 5000;	// 5 seconds
 	ok = SetServiceStatus( gServiceStatusHandle, &gServiceStatus );
 	check_translated_errno( ok, GetLastError(), kParamErr );
-
-  // CRASH THE SERVICE
-  void* ptr = 0xffffdc0c3c3d87f3;
-  memset(ptr, 0x11, 10);
 	
 	// Run the service. This does not return until the service quits or is stopped.
 	
@@ -932,6 +928,10 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 		gServiceStatus.dwWin32ExitCode				= ERROR_SERVICE_SPECIFIC_ERROR;
 		gServiceStatus.dwServiceSpecificExitCode 	= (DWORD) err;
 	}
+
+  // CRASH THE SERVICE
+  void* ptr = 0xffffdc0c3c3d87f3;
+  memset(ptr, 0x11, 10);
 	
 	// Service-specific work is done so mark the service as stopped.
 	

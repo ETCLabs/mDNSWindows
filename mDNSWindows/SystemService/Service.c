@@ -416,7 +416,7 @@ static OSStatus	InstallService( LPCTSTR inName, LPCTSTR inDisplayName, LPCTSTR i
 	err = translate_errno( scm, (OSStatus) GetLastError(), kOpenErr );
 	require_noerr( err, exit );
 	
-	service = CreateService( scm, inName, inDisplayName, SERVICE_ALL_ACCESS, SERVICE_WIN32_SHARE_PROCESS, 
+	service = CreateService( scm, inName, inDisplayName, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, 
 							 SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, fullPath, NULL, NULL, kServiceDependencies, 
 							 NULL, NULL );
 	err = translate_errno( service, (OSStatus) GetLastError(), kDuplicateErr );
@@ -900,7 +900,7 @@ static void WINAPI ServiceMain( DWORD argc, LPTSTR argv[] )
 	
 	// Initialize the service status and register the service control handler with the name of the service.
 	
-	gServiceStatus.dwServiceType 				= SERVICE_WIN32_SHARE_PROCESS;
+	gServiceStatus.dwServiceType 				= SERVICE_WIN32_OWN_PROCESS;
 	gServiceStatus.dwCurrentState 				= 0;
 	gServiceStatus.dwControlsAccepted 			= SERVICE_ACCEPT_STOP|SERVICE_ACCEPT_SHUTDOWN|SERVICE_ACCEPT_POWEREVENT;
 	gServiceStatus.dwWin32ExitCode 				= NO_ERROR;

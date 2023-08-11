@@ -81,16 +81,16 @@ windows-build-versioned-merge-module:
 deploy-binaries:
   stage: deploy
   tags:
-    - ct-linux-docker
-  image: etc-docker.artifactory.etcconnect.com/python:latest
+    - etc-linux-docker
+  image: etc-docker.artifactory.etcconnect.com/python:3.8
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   script:
     - pip config set global.index-url https://artifactory.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
     - pip config set global.trusted-host artifactory.etcconnect.com
     - pip install requests etcdevtool PyGithub
-    - git config user.name "GitLab CI"
-    - git config user.email "noreply.gitlab@etcconnect.com"
+    - git config user.name "ETC CI"
+    - git config user.email "noreply.ci@etcconnect.com"
     - git config http.sslVerify false
     - etcdevtool version --from-ci --step update-files . ${NEW_VERSION}.1
     - git add .

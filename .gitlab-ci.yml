@@ -50,7 +50,7 @@ windows-versioned-build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
+    - etcdevtool version --from-ci --step update-files . ($NEW_VERSION + ".1")
 
 .windows-build-merge-module:
   stage: build-merge-module
@@ -72,7 +72,7 @@ windows-build-versioned-merge-module:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ($NEW_VERSION + ".1")
+    - etcdevtool version --from-ci --step update-files . ($NEW_VERSION + ".1")
   artifacts:
     paths:
       - tools/install/bin/Release/ETC_mDNSInstall.msm
@@ -88,11 +88,11 @@ deploy-binaries:
   script:
     - pip config set global.index-url https://artifactory.etcconnect.com/artifactory/api/pypi/ETC-PyPI/simple
     - pip config set global.trusted-host artifactory.etcconnect.com
-    - pip install requests etclibtool PyGithub
+    - pip install requests etcdevtool PyGithub
     - git config user.name "GitLab CI"
     - git config user.email "noreply.gitlab@etcconnect.com"
     - git config http.sslVerify false
-    - etclibtool version --from-ci --config tools/ci/etclibtool_config.json --step update-files . ${NEW_VERSION}.1
+    - etcdevtool version --from-ci --step update-files . ${NEW_VERSION}.1
     - git add .
     - git commit -m "[skip ci] Update version files for mDNSWindows version ${NEW_VERSION}"
     - git tag -a v${NEW_VERSION} -m "mDNSWindows release version ${NEW_VERSION}"

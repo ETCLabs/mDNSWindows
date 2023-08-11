@@ -1,0 +1,10 @@
+{
+  "devToolConfig": {
+    "version": {
+      "fileTemplates": {
+        "tools/ci/templates/vars.wxi.in": "tools/install/vars.wxi",
+        "tools/ci/templates/WinVersRes.h.in": "mDNSWindows/WinVersRes.h"
+      }
+    }
+  }
+}

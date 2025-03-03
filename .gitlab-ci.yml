@@ -95,5 +95,5 @@ deploy-binaries:
     - git add .
     - git commit -m "[skip ci] Update version files for mDNSWindows version ${NEW_VERSION}"
     - git tag -a v${NEW_VERSION} -m "mDNSWindows release version ${NEW_VERSION}"
-    - etcdevtool version --from-ci --step push-from-ci .
+    - etcdevtool version --from-ci --step push-from-ci . ${NEW_VERSION}.1
     - python3 tools/ci/deploy_to_github_release.py ${NEW_VERSION}

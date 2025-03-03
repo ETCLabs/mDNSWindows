@@ -28,10 +28,10 @@
 #define MASTER_COMPANY_NAME   "ETC Inc."
 
 // Define the product version for mDNSResponder on Windows
-#define MASTER_PROD_VERS		1,3,1,1
-#define MASTER_PROD_VERS_STR	"1.3.1.1"
+#define MASTER_PROD_VERS		1,3,2,1
+#define MASTER_PROD_VERS_STR	"1.3.2.1"
 
 // Define the legal copyright
-#define MASTER_LEGAL_COPYRIGHT "Copyright 2023 ETC Inc."
+#define MASTER_LEGAL_COPYRIGHT "Copyright 2025 ETC Inc."
 
 #endif // WINRESVERS_H

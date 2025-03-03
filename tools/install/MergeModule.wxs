@@ -19,9 +19,9 @@
               <File Id="mDNSResponderExe" Name="mDNSResponder.exe" DiskId="1" KeyPath="yes">
                 <!-- Create Windows Firewall exceptions for the mDNSResponder executable. -->
                 <fire:FirewallException Id="EtcDnsSdTCP" Name="ETC DNS-SD Service (TCP-in)"
-                    Profile="all" Protocol="tcp" Scope="any" IgnoreFailure="no" />
+                    Profile="all" Protocol="tcp" Scope="any" IgnoreFailure="yes" />
                 <fire:FirewallException Id="EtcDnsSdUDP" Name="ETC DNS-SD Service (UDP-in)"
-                    Profile="all" Protocol="udp" Scope="any" IgnoreFailure="no" />
+                    Profile="all" Protocol="udp" Scope="any" IgnoreFailure="yes" />
               </File>
               <ServiceControl Id="DnsSdServiceCtl" Name="ETC DNS-SD Service" Stop="both"
                   Start="install" Remove="uninstall" />

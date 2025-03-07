@@ -25,14 +25,14 @@ include:
     - ct-windows
   parallel:
     matrix:
-      - CMAKE_GENERATOR: Visual Studio 15 2017
+      - CMAKE_GENERATOR_OPTIONS: -A Win32
         ARTIFACT_TYPE: x86
-      - CMAKE_GENERATOR: Visual Studio 15 2017 Win64
+      - CMAKE_GENERATOR_OPTIONS: -A x64
         ARTIFACT_TYPE: x64
   script:
     - mkdir build_$env:ARTIFACT_TYPE
     - cd build_$env:ARTIFACT_TYPE
-    - cmake -G "$env:CMAKE_GENERATOR" -DCMAKE_INSTALL_PREFIX=install ..
+    - cmake -G "Visual Studio 16 2019" $env:CMAKE_GENERATOR_OPTIONS.Split(" ") -DCMAKE_INSTALL_PREFIX=install ..
     - cmake --build . --config Release
     - cmake -P cmake_install.cmake
   artifacts:

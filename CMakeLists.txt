@@ -2,7 +2,7 @@
 # To use, create a build directory below this one, cd to it, and run 'cmake ..' .
 #
 
-cmake_minimum_required(VERSION 3.4)  #3.4 handles Manifest files better than 3.3.
+cmake_minimum_required(VERSION 3.20)
 project(mDNSWindows)
 
 if(MSVC)

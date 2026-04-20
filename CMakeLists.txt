@@ -2,7 +2,7 @@
 # To use, create a build directory below this one, cd to it, and run 'cmake ..' .
 #
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
 project(mDNSWindows)
 
 if(MSVC)

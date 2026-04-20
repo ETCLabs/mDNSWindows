@@ -58,7 +58,7 @@ windows-versioned-build:
   script:
     - ren build_x86 build
     - >
-      & 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
+      & 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe'
       -property:Configuration=Release -property:Platform=x86 .\tools\install\mDNSInstall.sln
 
 windows-build-test-merge-module:

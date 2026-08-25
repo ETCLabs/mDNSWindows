@@ -29,7 +29,7 @@
 
 !define PRODUCT_NAME "ETC DNS-SD Service x${ARTIFACT_TYPE}"
 !define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall{8A23B836-C37F-4EB7-9EA9-4CAD5E5EAABF}"
-!define PRODUCT_VERSION "1.3.4"
+!define PRODUCT_VERSION "1.3.5.1"
 
 # the name of the uninstaller
 Outfile "mDNS_Fake_Install.exe"

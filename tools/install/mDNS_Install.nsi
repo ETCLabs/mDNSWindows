@@ -31,7 +31,7 @@
 
 # this value is written when .gitlab-ci.yml runs the command
 # - etcdevtool version --from-ci --step update-files . ($NEW_VERSION + ".1")
-!define PRODUCT_VERSION "1.3.4"
+!define PRODUCT_VERSION "1.3.5.1"
 
 # the name of the installer
 Outfile "ETC_mDNS_Install_x${ARTIFACT_TYPE}.exe"

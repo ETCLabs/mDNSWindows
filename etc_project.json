@@ -3,7 +3,9 @@
     "version": {
       "fileTemplates": {
         "tools/ci/templates/vars.wxi.in": "tools/install/vars.wxi",
-        "tools/ci/templates/WinVersRes.h.in": "mDNSWindows/WinVersRes.h"
+        "tools/ci/templates/WinVersRes.h.in": "mDNSWindows/WinVersRes.h",
+        "tools/install/mDNS_Install.nsi.in": "tools/install/mDNS_Install.nsi",
+        "tools/install/mDNS_Uninstall.nsi.in": "tools/install/mDNS_Uninstall.nsi"
       }
     }
   }

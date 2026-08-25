@@ -14,8 +14,8 @@ GH_API_TOKEN = os.getenv("SVC_ETCLABS_REPO_TOKEN")
 
 
 def stage_binaries():
-    """Gathers the x86 and x64 installation and the merge module to a common location to upload
-    to GitHub"""
+    """Gathers the x86 and x64 installation packages and NSIS installer to a common location
+    to upload to GitHub."""
 
     os.makedirs("deploy", exist_ok=True)
 
@@ -32,6 +32,11 @@ def stage_binaries():
                     relative_path_from_base[len(os.path.join("build_x64", "install", "")) :],
                 )
 
+    shutil.copy2(
+        os.path.join("tools", "install", "ETC_mDNS_Install_x64.exe"),
+        os.path.join("deploy", "ETC_mDNS_Install_x64.exe"),
+    )
+
     with zipfile.ZipFile(
         os.path.join("deploy", "mDNSWindows_x86.zip"), "w", zipfile.ZIP_DEFLATED
     ) as archive:
@@ -44,8 +49,8 @@ def stage_binaries():
                 )
 
     shutil.copy2(
-        os.path.join("tools", "install", "bin", "Release", "ETC_mDNSInstall.msm"),
-        os.path.join("deploy", "ETC_mDNSInstall.msm"),
+        os.path.join("tools", "install", "ETC_mDNS_Install_x86.exe"),
+        os.path.join("deploy", "ETC_mDNS_Install_x86.exe"),
     )
 
 
@@ -74,7 +79,8 @@ def deploy_binaries(version: str):
     )
     new_release.upload_asset(os.path.join("deploy", "mDNSWindows_x64.zip"))
     new_release.upload_asset(os.path.join("deploy", "mDNSWindows_x86.zip"))
-    new_release.upload_asset(os.path.join("deploy", "ETC_mDNSInstall.msm"))
+    new_release.upload_asset(os.path.join("deploy", "ETC_mDNS_Install_x64.exe"))
+    new_release.upload_asset(os.path.join("deploy", "ETC_mDNS_Install_x86.exe"))
 
 
 def main():

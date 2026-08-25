@@ -5,7 +5,7 @@ workflow:
 
 stages:
   - build
-  - build-merge-module
+  - installer
   - deploy
 
 variables:
@@ -51,30 +51,29 @@ windows-versioned-build:
   before_script:
     - etcdevtool version --from-ci --step update-files . ($NEW_VERSION + ".1")
 
-.windows-build-merge-module:
-  stage: build-merge-module
+.windows-build-installer:
+  stage: installer
   tags:
     - ct-windows
   script:
-    - ren build_x86 build
-    - >
-      & 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe'
-      -property:Configuration=Release -property:Platform=x86 .\tools\install\mDNSInstall.sln
+    - cd tools\ci
+    - cmd /c build_mdns_installer.bat
 
-windows-build-test-merge-module:
-  extends: .windows-build-merge-module
+windows-build-test-installer:
+  extends: .windows-build-installer
   rules:
     - if: '$CI_PIPELINE_SOURCE != "web"'
 
-windows-build-versioned-merge-module:
-  extends: .windows-build-merge-module
+windows-build-versioned-installer:
+  extends: .windows-build-installer
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $NEW_VERSION =~ /^\d+\.\d+\.\d+$/'
   before_script:
     - etcdevtool version --from-ci --step update-files . ($NEW_VERSION + ".1")
   artifacts:
     paths:
-      - tools/install/bin/Release/ETC_mDNSInstall.msm
+      - tools/install/ETC_mDNS_Install_x86.exe
+      - tools/install/ETC_mDNS_Install_x64.exe
 
 # Deploy to GitHub Release for any new 3-digit version (M.m.p)
 deploy-binaries:
